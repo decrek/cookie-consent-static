@@ -5,10 +5,438 @@ permalink: index.html
 {% extends "layouts/base.njk" %}
 
 {% block main %}
-  <div class="container mx-auto px-4">
-    <div>
-      <span class="text-change">Good design</span><br/>
-      <span class="change">is<br/>as little design<br/>as possible</span>
+  <div class="container">
+    <h1>Cookie consent for static websites</h1>
+
+    <p>This is a static website, which means I can only read out cookie with javascript, which is late. Therefor the cookie banner is shown late as it is rendered with JS and initially is hidden.</p>
+    <p>On this webpage the cookie notification is inside of the pregenerated HTML. And for subsequent page request it is stripped out inside the service worker.</p>
+    <p>By doing this it should have a positive impact on largest contenful paint, as it will not be the cookie banner anymore. That means there will be no reflow and no exrta painting, which should be beneficial for the user experience.</p>
+
+    <p>The below information comes from <a href="https://web.dev/lcp/" target="_blank" rel="noreferrer noopener">web.dev</a></p>
+
+    <div class="container">
+      <header class="w-article-header">
+        <h1 id="largest-contentful-paint-(lcp)" class="w-article-header__headline">Largest Contentful Paint (LCP)</h1>
+        <div class="w-author__published">
+          <time>Aug 8, 2019</time>
+          <span class="w-author__separator">•</span> Updated <time>Jun 17, 2020</time>
+        </div>
+
+        <div class="w-layout-container--narrow w-post-signpost">
+          <span class="w-post-signpost__title">Appears in:</span>
+          <a class="w-post-signpost__link" href="/learn-web-vitals">Web Vitals</a><span class="w-post-signpost__divider">|</span><a class="w-post-signpost__link" href="/metrics">Metrics</a>
+        </div>
+
+
+        <div class="w-authors w-mt--xl w-pt--sm">
+
+          <div class="w-author">
+            <a href="/authors/philipwalton">
+              <img class="w-author__image " src="https://webdev.imgix.net/images/authors/philipwalton.jpg" alt="Philip Walton">
+            </a>
+            <div class="w-author__info" style="display: flex; flex-direction: column; justify-content: center;">
+              <cite class="w-author__name">
+                <a class="w-author__name-link" href="/authors/philipwalton">Philip Walton</a>
+              </cite>
+              <ul class="w-author__link-list">
+                <li class="w-author__link-listitem">
+                  <a class="w-author__link" href="https://twitter.com/philwalton">Twitter</a>
+                </li>
+                <li class="w-author__link-listitem">
+                  <a class="w-author__link" href="https://github.com/philipwalton">GitHub</a>
+                </li>
+
+                <li class="w-author__link-listitem">
+                  <a class="w-author__link" href="https://philipwalton.com">Blog</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+      </header>
+
+
+
+      <div class="w-aside w-aside--note">
+        <p>Largest Contentful Paint (LCP) is an important, user-centric metric for
+          measuring <a href="/user-centric-performance-metrics/#types-of-metrics">perceived load
+            speed</a> because it marks
+          the point in the page load timeline when the page's main content has likely
+          loaded—a fast LCP helps reassure the user that the page is
+          <a href="/user-centric-performance-metrics/#questions">useful</a>.</p>
+      </div>
+      <p>Historically, it's been a challenge for web developers to measure how quickly
+        the main content of a web page loads and is visible to users.</p>
+      <p>Older metrics like
+        <a href="https://developer.mozilla.org/en-US/docs/Web/Events/load">load</a> or
+        <a href="https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded">DOMContentLoaded</a>
+        are not good because they don't necessarily correspond to what the user sees on
+        their screen. And newer, user-centric performance metrics like <a href="/fcp/">First Contentful
+          Paint (FCP)</a> only capture the very beginning of the loading experience.
+        If a page shows a splash screen or displays a loading indicator, this moment is
+        not very relevant to the user.</p>
+      <p>In the past we've recommended performance metrics like <a href="/first-meaningful-paint/">First Meaningful Paint
+          (FMP)</a> and <a href="/speed-index/">Speed Index (SI)</a> (both
+        available in Lighthouse) to help capture more of the loading experience after
+        the initial paint, but these metrics are complex, hard to explain, and often
+        wrong—meaning they still do not identify when the main content of the page
+        has loaded.</p>
+      <p>Sometimes simpler is better. Based on discussions in the <a href="https://www.w3.org/webperf/">W3C Web
+          Performance Working Group</a> and research done at
+        Google, we've found that a more accurate way to measure when the main content
+        of a page is loaded is to look at when the largest element was rendered.</p>
+      <h2 id="what-is-lcp">What is LCP? <a class="w-headline-link" href="#what-is-lcp" aria-hidden="true">#</a></h2>
+      <p>The Largest Contentful Paint (LCP) metric reports the render time of the largest
+        <a href="#what-elements-are-considered">image or text block</a> visible within the
+        viewport.</p>
+      <picture>
+        <source srcset="../vitals/lcp_8x2.svg" media="(min-width: 640px)">
+        <img class="w-screenshot w-screenshot--filled" src="https://webdev.imgix.net/vitals/lcp_4x3.svg" alt="Good LCP values are 2.5 seconds, poor values are greater than 4.0
+            seconds and anything in between needs improvement" width="384" height="288">
+      </picture>
+      <h3 id="what-is-a-good-lcp-score">What is a good LCP score? <a class="w-headline-link" href="#what-is-a-good-lcp-score" aria-hidden="true">#</a></h3>
+      <p>To provide a good user experience, sites should strive to have Largest
+        Contentful Paint occur within the first <strong>2.5 seconds</strong> of the page starting to
+        load. To ensure you're hitting this target for most of your users, a good
+        threshold to measure is the <strong>75th percentile</strong> of page loads, segmented across
+        mobile and desktop devices.</p>
+      <div class="w-aside w-aside--note">
+        <p>To learn more about the research and methodology behind this recommendation,
+          see: <a href="/defining-core-web-vitals-thresholds/">Defining the Core Web Vitals metrics
+            thresholds</a></p>
+      </div>
+      <h3 id="what-elements-are-considered">What elements are considered? <a class="w-headline-link" href="#what-elements-are-considered" aria-hidden="true">#</a></h3>
+      <p>As currently specified in the <a href="https://wicg.github.io/largest-contentful-paint/">Largest Contentful Paint
+          API</a>, the types of elements
+        considered for Largest Contentful Paint are:</p>
+      <ul>
+        <li><code>&lt;img&gt;</code> elements</li>
+        <li><code>&lt;image&gt;</code> elements inside an <code>&lt;svg&gt;</code> element</li>
+        <li><code>&lt;video&gt;</code> elements (the poster image is used)</li>
+        <li>An element with a background image loaded via the
+          <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/url()"><code>url()</code></a> function
+          (as opposed to a
+          <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Images/Using_CSS_gradients">CSS gradient</a>)</li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Block-level_elements">Block-level</a>
+          elements containing text nodes or other inline-level text elements children.</li>
+      </ul>
+      <p>Note, restricting the elements to this limited set was intentional in order to
+        keep things simple in the beginning. Additional elements (e.g. <code>&lt;svg&gt;</code>,
+        <code>&lt;video&gt;</code>) may be added in the future as more research is conducted.</p>
+      <h3 id="how-is-an-element's-size-determined">How is an element's size determined? <a class="w-headline-link" href="#how-is-an-element's-size-determined" aria-hidden="true">#</a></h3>
+      <p>The size of the element reported for Largest Contentful Paint is typically the
+        size that's visible to the user within the viewport. If the element extends
+        outside of the viewport, or if any of the element is clipped or has non-visible
+        <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/overflow">overflow</a>, those
+        portions do not count toward the element's size.</p>
+      <p>For image elements that have been resized from their <a href="https://developer.mozilla.org/en-US/docs/Glossary/Intrinsic_Size">intrinsic
+          size</a>, the
+        size that gets reported is either the visible size or the intrinsic size,
+        whichever is smaller. For example, images that are shrunk down to a much
+        smaller than their intrinsic size will only report the size they're displayed
+        at, whereas images that are stretched or expanded to a larger size will only
+        report their intrinsic sizes.</p>
+      <p>For text elements, only the size of their text nodes is considered (the smallest
+        rectangle that encompasses all text nodes).</p>
+      <p>For all elements, any margin, padding, or border applied via CSS is not
+        considered.</p>
+      <div class="w-aside w-aside--note">
+        <p>Determining which text nodes belong to which elements can sometimes
+          be tricky, especially for elements whose children includes inline elements and
+          plain text nodes but also block-level elements. The key point is that every
+          text node belongs to (and only to) its closest block-level ancestor element.
+          In <a href="https://wicg.github.io/element-timing/#set-of-owned-text-nodes">spec
+            terms</a>:
+          each text node belongs to the element that generates its <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block">containing
+            block</a>.</p>
+      </div>
+      <h3 id="when-is-largest-contentful-paint-reported">When is largest contentful paint reported? <a class="w-headline-link" href="#when-is-largest-contentful-paint-reported" aria-hidden="true">#</a></h3>
+      <p>Web pages often load in stages, and as a result, it's possible that the largest
+        element on the page might change.</p>
+      <p>To handle this potential for change, the browser dispatches a
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceEntry"><code>PerformanceEntry</code></a>
+        of type <code>largest-contentful-paint</code> identifying the largest contentful element
+        as soon as the browser has painted the first frame. But then, after rendering
+        subsequent frames, it will dispatch another
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceEntry"><code>PerformanceEntry</code></a>
+        any time the largest contentful element changes.</p>
+      <p>For example, on a page with text and a hero image the browser may initially just
+        render the text—at which point the browser would dispatch a
+        <code>largest-contentful-paint</code> entry whose <code>element</code> property would likely reference
+        a <code>&lt;p&gt;</code> or <code>&lt;h1&gt;</code>. Later, once the hero image finishes loading, a second
+        <code>largest-contentful-paint</code> entry would be dispatched and its <code>element</code> property
+        would reference the <code>&lt;img&gt;</code>.</p>
+      <p>It's important to note that an element can only be considered the largest
+        contentful element once it has rendered and is visible to the user. Images that
+        have not yet loaded are not considered "rendered". Neither are text nodes using
+        web fonts during the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display#The_font_display_timeline">font block
+          period</a>.
+        In such cases a smaller element may be reported as the largest contentful
+        element, but as soon as the larger element finishes rendering, it'll be
+        reported via another  <code>PerformanceEntry</code> object.</p>
+      <p>In addition to late-loading images and fonts, a page may add new elements to
+        the DOM as new content becomes available. If any of these new elements is
+        larger than the previous largest contentful element, a new <code>PerformanceEntry</code>
+        will also be reported.</p>
+      <p>If a page removes an element from the DOM, that element will no longer be
+        considered. Similarly, if an element's associated image resource changes (e.g.
+        changing <code>img.src</code> via JavaScript), then that element will stop being considered
+        until the new image loads.</p>
+      <div class="w-aside w-aside--note">
+        <p>In the future, elements removed from the DOM may still be considered as LCP
+          candidates. <a href="https://github.com/WICG/largest-contentful-paint/issues/41#issuecomment-583589387">Research is currently being
+            done</a>
+          to assess the impact of this change. You can follow the metrics
+          <a href="http://bit.ly/chrome-speed-metrics-changelog">CHANGELOG</a> to stay up-to-date.</p>
+      </div>
+      <p>The browser will stop reporting new entries as soon as the user interacts with
+        the page (via a tap, scroll, or keypress), as user interaction often changes
+        what's visible to the user (which is especially true with scrolling).</p>
+      <p>For analysis purposes, you should only report the most recently dispatched
+        <code>PerformanceEntry</code> to your analytics service.</p>
+      <div class="w-aside w-aside--caution">
+        <p><strong>Caution:</strong>
+          Since users can open pages in a background tab, it's possible that the largest
+          contentful paint will not happen until the user focuses the tab, which can be
+          much later than when they first loaded it.</p>
+      </div>
+      <h4 id="load-time-vs.-render-time">Load time vs. render time <a class="w-headline-link" href="#load-time-vs.-render-time" aria-hidden="true">#</a></h4>
+      <p>For security reasons, the render timestamp of images is not exposed for
+        cross-origin images that lack the
+        <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Timing-Allow-Origin"><code>Timing-Allow-Origin</code></a>
+        header. Instead, only their load time is exposed (since this is already exposed
+        via many other web APIs).</p>
+      <p>The <a href="#measure-lcp-in-javascript">usage example</a>
+        below shows how to handle elements whose render time is not available. But,
+        when possible, it's always recommended to set the
+        <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Timing-Allow-Origin"><code>Timing-Allow-Origin</code></a>
+        header, so your metrics will be more accurate.</p>
+      <h3 id="how-are-element-layout-and-size-changes-handled">How are element layout and size changes handled? <a class="w-headline-link" href="#how-are-element-layout-and-size-changes-handled" aria-hidden="true">#</a></h3>
+      <p>To keep the performance overhead of calculating and dispatching new performance
+        entries low, changes to an element's size or position do not generate new LCP
+        candidates. Only the element's initial size and position in the viewport is
+        considered.</p>
+      <p>This means images that are initially rendered off-screen and then transition
+        on-screen may not be reported. It also means elements initially rendered in the
+        viewport that then get pushed down, out of view will still report their
+        initial, in-viewport size.</p>
+      <p>However, (as mentioned above) an element will be removed from consideration if
+        it's removed from the DOM or if its associated image resource changes.</p>
+      <h3 id="examples">Examples <a class="w-headline-link" href="#examples" aria-hidden="true">#</a></h3>
+      <p>Here are some examples of when the Largest Contentful Paint occurs on a few
+        popular websites:</p>
+      <p><img src="https://webdev.imgix.net/lcp/lcp-cnn-filmstrip.png" alt="Largest Contentful Paint timeline from cnn.com" width="1600" height="621"></p>
+      <p><img src="https://webdev.imgix.net/lcp/lcp-techcrunch-filmstrip.png" alt="Largest Contentful Paint timeline from techcrunch.com" width="1600" height="621"></p>
+      <p>In both of the timelines above, the largest element changes as content loads.
+        In the first example, new content is added to the DOM and that changes what
+        element is the largest. In the second example, the layout changes and content
+        that was previously the largest is removed from the viewport.</p>
+      <p>While it's often the case that late-loading content is larger than content
+        already on the page, that's not necessarily the case. The next two examples
+        show the Largest Contentful Paint occurring before the page fully loads.</p>
+      <p><img src="https://webdev.imgix.net/lcp/lcp-instagram-filmstrip.png" alt="Largest Contentful Paint timeline from instagram.com" width="1600" height="621"></p>
+      <p><img src="https://webdev.imgix.net/lcp/lcp-google-filmstrip.png" alt="Largest Contentful Paint timeline from google.com" width="1600" height="621"></p>
+      <p>In the first example, the Instagram logo is loaded relatively early and it
+        remains the largest element even as other content is progressively shown. In
+        the Google search results page example, the largest element is a paragraph of
+        text that is displayed before any of the images or logo finish loading. Since
+        all the individual images are smaller than this paragraph, it remains the
+        largest element throughout the load process.</p>
+      <div class="w-aside w-aside--note">
+        <p>In the first frame of the Instagram timeline, you may notice the camera logo
+          does not have a green box around it. That's because it's an <code>&lt;svg&gt;</code> element,
+          and <code>&lt;svg&gt;</code> elements are not currently considered LCP candidates. The first
+          LCP candidate is the text in the second frame.</p>
+      </div>
+      <h2 id="how-to-measure-lcp">How to measure LCP <a class="w-headline-link" href="#how-to-measure-lcp" aria-hidden="true">#</a></h2>
+      <p>LCP can be measured <a href="/user-centric-performance-metrics/#in-the-lab">in the lab</a>
+        or <a href="/user-centric-performance-metrics/#in-the-field">in the field</a>, and it's
+        available in the following tools:</p>
+      <h3 id="field-tools">Field tools <a class="w-headline-link" href="#field-tools" aria-hidden="true">#</a></h3>
+      <ul>
+        <li><a href="https://developers.google.com/web/tools/chrome-user-experience-report">Chrome User Experience
+            Report</a></li>
+        <li><a href="https://developers.google.com/speed/pagespeed/insights/">PageSpeed Insights</a></li>
+        <li><a href="https://support.google.com/webmasters/answer/9205520">Search Console (Core Web Vitals
+            report)</a></li>
+        <li><a href="https://github.com/GoogleChrome/web-vitals"><code>web-vitals</code> JavaScript library</a></li>
+      </ul>
+      <h3 id="lab-tools">Lab tools <a class="w-headline-link" href="#lab-tools" aria-hidden="true">#</a></h3>
+      <ul>
+        <li><a href="https://developers.google.com/web/tools/chrome-devtools/">Chrome DevTools</a></li>
+        <li><a href="https://developers.google.com/web/tools/lighthouse/">Lighthouse</a></li>
+        <li><a href="https://webpagetest.org/">WebPageTest</a></li>
+      </ul>
+      <h3 id="measure-lcp-in-javascript">Measure LCP in JavaScript <a class="w-headline-link" href="#measure-lcp-in-javascript" aria-hidden="true">#</a></h3>
+      <p>To measure LCP in JavaScript, you can use the <a href="https://wicg.github.io/largest-contentful-paint/">Largest Contentful Paint
+          API</a>. The following example
+        shows how to create a
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceObserver"><code>PerformanceObserver</code></a>
+        that listens for <code>largest-contentful-paint</code> entries and logs them to the
+        console.</p>
+      <web-copy-code><button class="w-button--icon w-button--round web-copy-code__button" aria-label="Copy code"><span class="w-tooltip w-tooltip--right" role="tooltip">Copy code</span></button><pre class="language-js"><code class="language-js"><span class="token keyword">new</span> <span class="token class-name">PerformanceObserver</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">entryList</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span><br>  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> entry <span class="token keyword">of</span> entryList<span class="token punctuation">.</span><span class="token function">getEntries</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'LCP candidate:'</span><span class="token punctuation">,</span> entry<span class="token punctuation">.</span>startTime<span class="token punctuation">,</span> entry<span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token punctuation">}</span><br><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">observe</span><span class="token punctuation">(</span><span class="token punctuation">{</span>type<span class="token operator">:</span> <span class="token string">'largest-contentful-paint'</span><span class="token punctuation">,</span> buffered<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+      </web-copy-code><div class="w-aside w-aside--warning">
+        <p><strong>Warning:</strong></p>
+        <p>This code shows how to log <code>largest-contentful-paint</code> entries to the console,
+          but measuring LCP in JavaScript is more complicated. See below for details:</p>
+      </div>
+      <p>In the above example, each logged <code>largest-contentful-paint</code> entry represents
+        the current LCP candidate. In general, the <code>startTime</code> value of the last entry
+        emitted is the LCP value—however, that is not always the case. Not all
+        <code>largest-contentful-paint</code> entries are valid for measuring LCP.</p>
+      <p>The following section lists the differences between what the API reports and how
+        the metric is calculated.</p>
+      <h4 id="differences-between-the-metric-and-the-api">Differences between the metric and the API <a class="w-headline-link" href="#differences-between-the-metric-and-the-api" aria-hidden="true">#</a></h4>
+      <ul>
+        <li>The API will dispatch <code>largest-contentful-paint</code> entries for pages loaded in a
+          background tab, but those pages should be ignored when calculating LCP.</li>
+        <li>The API will continue to dispatch <code>largest-contentful-paint</code> entries after a
+          page has been backgrounded, but those entries should be ignored when
+          calculating LCP (elements may only be considered if the page was in the
+          foreground the entire time).</li>
+        <li>The API does not report <code>largest-contentful-paint</code> entries when the page is
+          restored from the <a href="/bfcache/#impact-on-core-web-vitals">back/forward cache</a>,
+          but LCP should be measured in these cases since users experience them as
+          distinct page visits.</li>
+        <li>The API does not consider elements within iframes, but to properly measure LCP
+          you should consider them. Sub-frames can use the API to report their
+          <code>largest-contentful-paint</code> entries to the parent frame for aggregation.</li>
+      </ul>
+      <p>Rather than memorizing all these subtle differences, developers can use the
+        <a href="https://github.com/GoogleChrome/web-vitals"><code>web-vitals</code> JavaScript library</a> to
+        measure LCP, which handles these differences for you (where possible):</p>
+      <web-copy-code><button class="w-button--icon w-button--round web-copy-code__button" aria-label="Copy code"><span class="w-tooltip w-tooltip--right" role="tooltip">Copy code</span></button><pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span>getLCP<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'web-vitals'</span><span class="token punctuation">;</span><br><br><span class="token comment">// Measure and log LCP as soon as it's available.</span><br><span class="token function">getLCP</span><span class="token punctuation">(</span>console<span class="token punctuation">.</span>log<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+      </web-copy-code><p>You can refer to <a href="https://github.com/GoogleChrome/web-vitals/blob/master/src/getLCP.ts">the source code for
+          <code>getLCP()</code></a>
+        for a complete example of how to measure LCP in JavaScript.</p>
+      <div class="w-aside w-aside--note">
+        <p>In some cases (such as cross-origin iframes) it's not possible to measure LCP
+          in JavaScript. See the
+          <a href="https://github.com/GoogleChrome/web-vitals#limitations">limitations</a> section
+          of the <code>web-vitals</code> library for details.</p>
+      </div>
+      <h3 id="what-if-the-largest-element-isn't-the-most-important">What if the largest element isn't the most important? <a class="w-headline-link" href="#what-if-the-largest-element-isn't-the-most-important" aria-hidden="true">#</a></h3>
+      <p>In some cases the most important element (or elements) on the page is not the
+        same as the largest element, and developers may be more interested in measuring
+        the render times of these other elements instead. This is possible using the
+        <a href="https://wicg.github.io/element-timing/">Element Timing API</a>, as described in
+        the article on <a href="/custom-metrics/#element-timing-api">custom metrics</a>.</p>
+      <h2 id="how-to-improve-lcp">How to improve LCP <a class="w-headline-link" href="#how-to-improve-lcp" aria-hidden="true">#</a></h2>
+      <p>LCP is primarily affected by four factors:</p>
+      <ul>
+        <li>Slow server response times</li>
+        <li>Render-blocking JavaScript and CSS</li>
+        <li>Resource load times</li>
+        <li>Client-side rendering</li>
+      </ul>
+      <p>For a deep dive on how to improve LCP, see <a href="/optimize-lcp/">Optimize
+          LCP</a>. For additional guidance on individual
+        performance techniques that can also improve LCP, see:</p>
+      <ul>
+        <li><a href="/apply-instant-loading-with-prpl">Apply instant loading with the PRPL
+            pattern</a></li>
+        <li><a href="https://developers.google.com/web/fundamentals/performance/critical-rendering-path/">Optimizing the Critical Rendering
+            Path</a></li>
+        <li><a href="/fast#optimize-your-css">Optimize your CSS</a></li>
+        <li><a href="/fast#optimize-your-images">Optimize your Images</a></li>
+        <li><a href="/fast#optimize-web-fonts">Optimize web Fonts</a></li>
+        <li><a href="/fast#optimize-your-javascript">Optimize your JavaScript</a> (for
+          client-rendered sites)</li>
+      </ul>
+      <h2 id="additional-resources">Additional resources <a class="w-headline-link" href="#additional-resources" aria-hidden="true">#</a></h2>
+      <ul>
+        <li><a href="https://youtu.be/ctavZT87syI">Lessons learned from performance monitoring in
+            Chrome</a> by <a href="https://anniesullie.com/">Annie
+            Sullivan</a> at
+          <a href="https://perfnow.nl/">performance.now()</a> (2019)</li>
+      </ul>
+      <h2 id="changelog">CHANGELOG <a class="w-headline-link" href="#changelog" aria-hidden="true">#</a></h2>
+      <p>Occasionally, bugs are discovered in the APIs used to measure metrics, and
+        sometimes in the definitions of the metrics themselves. As a result, changes
+        must sometimes be made, and these changes can show up as improvements or
+        regressions in your internal reports and dashboards.</p>
+      <p>To help you manage this, all changes to either the implementation or definition
+        of these metrics will be surfaced in this
+        <a href="http://bit.ly/chrome-speed-metrics-changelog">CHANGELOG</a>.</p>
+
+
+      <div class="w-chips">
+
+        <a class="w-chip" href="/tags/performance/">Performance</a>
+
+        <a class="w-chip" href="/tags/metrics/">Metrics</a>
+
+      </div>
+
+      <div class="w-post-github-link w-mt--l w-mb--l">
+      <span class="w-mr--sm">
+
+        Last updated: <time>Jun 17, 2020</time>
+
+      </span>
+        <a href="https://github.com/GoogleChrome/web.dev/blob/master/src/site/content/en/metrics/lcp/index.md">
+          Improve article
+        </a>
+
+      </div>
+
+
+      <web-feedback additional-questions=""><!---->
+        <details class="w-details" open="">
+          <summary class="w-details__summary">
+            <h2 class="w-details__header">Give feedback</h2>
+          </summary>
+          <div class="w-display--flex w-justify-content--center hidden">
+            <p class="w-feedback__confirmation w-text--center w-force-focus" tabindex="-1">
+              Thank you for the feedback!
+            </p>
+          </div>
+          <form class="w-feedback__form false">
+            <small>All fields optional</small>
+            <div class="web-feedback__rows">
+              <div class="web-feedback__row">
+                <div></div>
+                <div id="yes-label">Yes</div>
+                <div id="no-label">No</div>
+              </div>
+
+              <!----><div class="web-feedback__row">
+                <div id="helpful-label"><!---->Was this page helpful?<!----></div>
+                <label>
+                  <input type="radio" value="1" aria-labelledby="helpful-label yes-label" name="Helpfulness">
+                </label>
+                <label>
+                  <input type="radio" value="0" aria-labelledby="helpful-label no-label" name="Helpfulness">
+                </label>
+              </div><!----><div class="web-feedback__row">
+                <div id="effective-label"><!---->Did this page help you complete your goal(s)?<!----></div>
+                <label>
+                  <input type="radio" value="1" aria-labelledby="effective-label yes-label" name="Effectiveness">
+                </label>
+                <label>
+                  <input type="radio" value="0" aria-labelledby="effective-label no-label" name="Effectiveness">
+                </label>
+              </div><!---->
+            </div>
+
+            <div class="w-visually-hidden">
+              <label for="is-it-just-me-or-was-this-form-filled-out-by-a-robot">Congrats on finding this field, I'd recommend you not filling it
+                out though...</label>
+              <input type="text" tabindex="-1" id="is-it-just-me-or-was-this-form-filled-out-by-a-robot" name="is-it-just-me-or-was-this-form-filled-out-by-a-robot">
+            </div>
+
+            <div class="w-text--center w-mt--sm">
+              <button class="w-button w-button--primary" type="submit">
+                Submit
+              </button>
+            </div>
+          </form>
+        </details>
+        <!----></web-feedback>
     </div>
+
+
   </div>
 {% endblock %}

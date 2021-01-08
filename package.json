@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "npm run build && npx serve dist",
     "clean": "rimraf dist && mkdirp dist",
     "prebuild": "run-s clean",
     "build": "run-p build:webpack build:eleventy",
