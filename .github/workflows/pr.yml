@@ -4,6 +4,8 @@ jobs:
   lhci:
     name: Lighthouse
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: ${{ secrets.NODE_ENV }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -21,8 +23,3 @@ jobs:
         run: |
           npm install -g @lhci/cli@0.6.x
           lhci autorun
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          LHCI_BUILD_TOKEN: ${{ secrets.LHCI_BUILD_TOKEN }}
-          BA_USERNAME: ${{ secrets.BA_USERNAME }}
-          BA_PASSWORD: ${{ secrets.BA_PASSWORD }}
