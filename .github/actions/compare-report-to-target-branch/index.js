@@ -63,7 +63,7 @@ function getLatestBaseReport() {
       console.log('----------')
       console.log(body.data)
       console.log('----------')
-      console.log(body.statistics)
+      console.log(body.data.statistics)
       console.log('----------')
       return body.data.statistics[0]
     })
