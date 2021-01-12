@@ -8,7 +8,7 @@ const {
 
 async function main() {
   const thisBuild = JSON.parse(getInput('report'))
-  const baseBuild = await getLatestBaseReport()
+  const baseBuild = await getLatestBaseReport().categories
 
   // console.log(thisBuild.performance)
   // console.log('-----------------------')
