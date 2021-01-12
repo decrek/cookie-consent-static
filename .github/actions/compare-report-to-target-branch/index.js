@@ -16,7 +16,11 @@ async function main() {
   console.log('-------------------------------------------------')
 
 
-  console.log(thisBuild.categories)
+  console.log(JSON.parse(thisBuild))
+
+  console.log('-------------------------------------------------')
+  console.log('---------------------')
+  console.log(JSON.parse(thisBuild).performance)
 
   console.log('-------------------------------------------------')
   console.log('-------------------------------------------------')
