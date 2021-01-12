@@ -1,0 +1,13 @@
+name: Compare report to target branch
+author: decrek
+description: Compare lighthouse report from PR to target branch
+runs:
+  using: node12
+  main: 'index.js'
+inputs:
+  report:
+    description: 'A lighthouse report'
+    required: true
+branding:
+  icon: git-pull-request
+  color: green
