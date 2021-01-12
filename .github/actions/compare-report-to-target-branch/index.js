@@ -7,48 +7,8 @@ const {
 } = require('@lhci/utils/src/saved-reports.js');
 
 async function main() {
-  const thisBuild = getInput('report')
+  const thisBuild = JSON.parse(getInput('report'))
   const baseBuild = await getLatestBaseReport()
-
-
-  console.log(thisBuild)
-  console.log('-------------------------------------------------')
-  console.log('-------------------------------------------------')
-
-
-  console.log(JSON.parse(thisBuild))
-
-  console.log('-------------------------------------------------')
-  console.log('---------------------')
-  console.log(JSON.parse(thisBuild).performance)
-
-  console.log('-------------------------------------------------')
-  console.log('-------------------------------------------------')
-
-
-  console.log(thisBuild.performance)
-    console.log('-------------------------------------------------')
-  console.log(thisBuild.accessibility)
-    console.log('-------------------------------------------------')
-  console.log(thisBuild['best-practices'])
-    console.log('-------------------------------------------------')
-  console.log(thisBuild.seo)
-    console.log('-------------------------------------------------')
-  console.log(thisBuild.pwa)
-    console.log('-------------------------------------------------')
-  console.log('-------------------------------------------------')
-  console.log('-------------------------------------------------')
-  console.log('-------------------------------------------------')
-  console.log(baseBuild.performance)
-    console.log('-------------------------------------------------')
-  console.log(baseBuild.accessibility)
-    console.log('-------------------------------------------------')
-  console.log(baseBuild['best-practices'])
-    console.log('-------------------------------------------------')
-  console.log(baseBuild.seo)
-    console.log('-------------------------------------------------')
-  console.log(baseBuild.pwa)
-    console.log('-------------------------------------------------')
 
   setOutput('lighthouseComparison', thisBuild && baseBuild ? `On this build your scores were
 | Category | Current Build | Base Build | Difference
