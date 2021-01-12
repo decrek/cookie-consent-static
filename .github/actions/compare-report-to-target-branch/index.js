@@ -11,6 +11,17 @@ async function main() {
   const baseBuild = await getLatestBaseReport()
 
 
+  console.log(thisBuild)
+  console.log('-------------------------------------------------')
+  console.log('-------------------------------------------------')
+
+
+  console.log(thisBuild.categories)
+
+  console.log('-------------------------------------------------')
+  console.log('-------------------------------------------------')
+
+
   console.log(thisBuild.performance)
     console.log('-------------------------------------------------')
   console.log(thisBuild.accessibility)
