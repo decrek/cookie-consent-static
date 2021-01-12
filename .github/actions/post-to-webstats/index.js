@@ -1,4 +1,4 @@
-const { setFailed } = require('@actions/core')
+const { setOutput, setFailed } = require('@actions/core')
 const fetch = require('node-fetch')
 
 const _ = require('@lhci/utils/src/lodash.js')
@@ -30,6 +30,8 @@ async function main() {
       }
     })
   })
+
+  setOutput('report', lighthouseReport)
 }
 
 main().catch(err => setFailed(err.message))

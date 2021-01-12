@@ -19,13 +19,21 @@ jobs:
         env:
           NODE_ENV: ${{ secrets.NODE_ENV }}
       - name: Run Lighthouse CI
-        id: lhci
         run: |
           npm install -g @lhci/cli@0.6.x
           lhci autorun
       - name: Post to webstats
+        id: report
         uses: ./.github/actions/post-to-webstats
         env:
           GITHUB_SHA: ${{ secrets.GITHUB_SHA }}
           WEBSTATS_PROJECT_ID: ${{ secrets.WEBSTATS_PROJECT_ID }}
           WEBSTATS_API_KEY: ${{ secrets.WEBSTATS_API_KEY }}
+      - name: Compare lighthouse report to target branch
+        uses: ./.github/actions/compare-report-to-target-branch
+        env:
+          GITHUB_BASE_REF: ${{ secrets.GITHUB_BASE_REF }}
+          GITHUB_BASE_COMMIT_SHA: ${{ github.event.pull_request.base.sha }}
+          WEBSTATS_PROJECT_ID: ${{ secrets.WEBSTATS_PROJECT_ID }}
+          WEBSTATS_API_KEY: ${{ secrets.WEBSTATS_API_KEY }}
+
