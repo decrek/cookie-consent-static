@@ -10,21 +10,10 @@ async function main() {
   const thisBuild = JSON.parse(getInput('report'))
   const baseBuild = await getLatestBaseReport()
 
-  console.log(thisBuild.performance)
-  console.log('-----------------------')
-  console.log(thisBuild.performance.score)
-  console.log('--------------------------')
-  console.log(baseBuild)
-  console.log('-----------------------')
-  console.log(baseBuild.categories)
-  console.log('-----------------------')
-  console.log(baseBuild.categories.performance.score)
-  console.log('--------------------------')
-
   setOutput('lighthouseComparison', thisBuild && baseBuild ? `On this build your scores were
 | Category | Current Build | Base Build | Difference
 | --- | --- | --- | --- |
-| Performance | ${thisBuild.performance.score * 100} | ${baseBuild.performance.score * 100} | ${diff(thisBuild.performance.score * 100, baseBuild.performance.score * 100)}|
+| Performance | ${thisBuild.performance.score * 100} | ${baseBuild.categories.performance.score * 100} | ${diff(thisBuild.performance.score * 100, baseBuild.categories.performance.score * 100)}|
 ` : 'Fragments not accesible');
 }
 
