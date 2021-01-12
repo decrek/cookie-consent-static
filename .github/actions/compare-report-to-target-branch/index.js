@@ -9,6 +9,11 @@ const {
 async function main() {
   const thisBuild = getInput('report')
   const baseBuild = await getLatestBaseReport()
+
+  console.log(thisBuild)
+  console.log('----------------------------------------')
+  console.log(baseBuild)
+
   setOutput('lhciComment', thisBuild && baseBuild ? `On this build your scores were
 | Category | Current Build | Base Build | Difference
 | --- | --- | --- | --- |
@@ -53,9 +58,7 @@ async function getLatestBaseReport() {
     })
   })
 
-  console.log(latestBaseReport)
-
-  return latestBaseReport
+  return await latestBaseReport.json()
 }
 
 function diff(a, b) {
