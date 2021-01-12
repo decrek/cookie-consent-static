@@ -8,12 +8,7 @@ const {
 
 async function main() {
   const thisBuild = getInput('report')
-  const baseBuild = await getLatestBaseReport()
-
-
-  console.log(thisBuild)
-  console.log(';;;;;;;;;;;;;;;;;;;;;;;;')
-  console.log(baseBuild)
+  const baseBuild = await getLatestBaseReport().categories
 
   setOutput('lighthouseComparison', thisBuild && baseBuild.categories ? `On this build your scores were
 | Category | Current Build | Base Build | Difference
