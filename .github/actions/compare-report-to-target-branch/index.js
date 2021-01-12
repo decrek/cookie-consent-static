@@ -11,9 +11,29 @@ async function main() {
   const baseBuild = await getLatestBaseReport()
 
 
-  console.log(baseBuild)
+  console.log(thisBuild.performance)
+    console.log('-------------------------------------------------')
+  console.log(thisBuild.accessibility)
+    console.log('-------------------------------------------------')
+  console.log(thisBuild['best-practices'])
+    console.log('-------------------------------------------------')
+  console.log(thisBuild.seo)
+    console.log('-------------------------------------------------')
+  console.log(thisBuild.pwa)
+    console.log('-------------------------------------------------')
   console.log('-------------------------------------------------')
-  console.log(baseBuild.categories)
+  console.log('-------------------------------------------------')
+  console.log('-------------------------------------------------')
+  console.log(baseBuild.performance)
+    console.log('-------------------------------------------------')
+  console.log(baseBuild.accessibility)
+    console.log('-------------------------------------------------')
+  console.log(baseBuild['best-practices'])
+    console.log('-------------------------------------------------')
+  console.log(baseBuild.seo)
+    console.log('-------------------------------------------------')
+  console.log(baseBuild.pwa)
+    console.log('-------------------------------------------------')
 
   setOutput('lighthouseComparison', thisBuild && baseBuild ? `On this build your scores were
 | Category | Current Build | Base Build | Difference
