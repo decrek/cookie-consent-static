@@ -14,7 +14,7 @@ async function main() {
   console.log('----------------------------------------')
   console.log(baseBuild)
 
-  setOutput('lhciComment', thisBuild && baseBuild ? `On this build your scores were
+  setOutput('lighthouseComparison', thisBuild && baseBuild ? `On this build your scores were
 | Category | Current Build | Base Build | Difference
 | --- | --- | --- | --- |
 | Performance | ${thisBuild.performance.score * 100} | ${baseBuild.performance.score * 100} | ${diff(thisBuild.performance.score * 100, baseBuild.performance.score * 100)}|
@@ -27,8 +27,8 @@ async function main() {
 
 main().catch(err => setFailed(err.message))
 
-async function getLatestBaseReport() {
-  const latestBaseReport = await fetch('https://webstats.vercel.app/api/graphql', {
+function getLatestBaseReport() {
+  return fetch('https://webstats.vercel.app/api/graphql', {
     method: 'post',
     headers: {
       'x-api-key': process.env.WEBSTATS_API_KEY
@@ -57,8 +57,8 @@ async function getLatestBaseReport() {
       }
     })
   })
-
-  return await latestBaseReport.json()
+    .then(res => res.json())
+    .then(body => body.data.statistics[0])
 }
 
 function diff(a, b) {
