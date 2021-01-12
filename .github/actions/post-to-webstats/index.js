@@ -31,7 +31,7 @@ async function main() {
     })
   })
 
-  setOutput('report', JSON.stringify(lighthouseReport))
+  setOutput('report', lighthouseReport.categories)
 }
 
 main().catch(err => setFailed(err.message))
