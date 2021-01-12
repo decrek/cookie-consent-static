@@ -10,16 +10,27 @@ async function main() {
   const thisBuild = JSON.parse(getInput('report'))
   const baseBuild = await getLatestBaseReport()
 
+  console.log(thisBuild.performance)
+  console.log('-----------------------')
+  console.log(thisBuild.performance.score)
+  console.log('--------------------------')
+  console.log(baseBuild.performance)
+  console.log('-----------------------')
+  console.log(baseBuild.performance.score)
+  console.log('--------------------------')
+
   setOutput('lighthouseComparison', thisBuild && baseBuild ? `On this build your scores were
 | Category | Current Build | Base Build | Difference
 | --- | --- | --- | --- |
 | Performance | ${thisBuild.performance.score * 100} | ${baseBuild.performance.score * 100} | ${diff(thisBuild.performance.score * 100, baseBuild.performance.score * 100)}|
-| Accessibility | ${thisBuild.accessibility.score * 100} | ${baseBuild.accessibility.score * 100} | ${diff(thisBuild.accessibility.score * 100, baseBuild.accessibility.score * 100)}|
-| Best Practices | ${thisBuild['best-practices'].score * 100} | ${baseBuild['best-practices'].score * 100} | ${diff(thisBuild['best-practices'].score * 100, baseBuild['best-practices'].score * 100)}|
-| SEO | ${thisBuild.seo.score * 100} | ${baseBuild.seo.score * 100} | ${diff(thisBuild.seo.score * 100, baseBuild.seo.score * 100)}|
-| PWA | ${thisBuild.pwa.score * 100} | ${baseBuild.pwa.score * 100} | ${diff(thisBuild.pwa.score * 100, baseBuild.pwa.score * 100)}|
 ` : 'Fragments not accesible');
 }
+
+// | Accessibility | ${thisBuild.accessibility.score * 100} | ${baseBuild.accessibility.score * 100} | ${diff(thisBuild.accessibility.score * 100, baseBuild.accessibility.score * 100)}|
+// | Best Practices | ${thisBuild['best-practices'].score * 100} | ${baseBuild['best-practices'].score * 100} | ${diff(thisBuild['best-practices'].score * 100, baseBuild['best-practices'].score * 100)}|
+// | SEO | ${thisBuild.seo.score * 100} | ${baseBuild.seo.score * 100} | ${diff(thisBuild.seo.score * 100, baseBuild.seo.score * 100)}|
+// | PWA | ${thisBuild.pwa.score * 100} | ${baseBuild.pwa.score * 100} | ${diff(thisBuild.pwa.score * 100, baseBuild.pwa.score * 100)}|
+
 
 main().catch(err => setFailed(err.message))
 
