@@ -1,0 +1,12 @@
+name: Post lighthouse report to webstats
+author: decrek
+description: Post lighthouse report to webstats
+runs:
+  using: node12
+  main: 'index.js'
+outputs:
+  report:
+    description: The whole Lighthouse report
+branding:
+  icon: git-pull-request
+  color: green

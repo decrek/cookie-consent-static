@@ -1,0 +1,47 @@
+name: CI
+on: [pull_request]
+jobs:
+  lhci:
+    name: Compare Lighthouse for PR to target branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+        env:
+          NODE_ENV: ${{ secrets.NODE_ENV }}
+      - name: Run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.6.x
+          lhci autorun
+      - name: Post to webstats
+        id: report
+        uses: ./.github/actions/post-to-webstats
+        env:
+          GITHUB_SHA: ${{ secrets.GITHUB_SHA }}
+          WEBSTATS_PROJECT_ID: ${{ secrets.WEBSTATS_PROJECT_ID }}
+          WEBSTATS_API_KEY: ${{ secrets.WEBSTATS_API_KEY }}
+      - name: Compare lighthouse report to target branch
+        id: compare
+        uses: ./.github/actions/compare-report-to-target-branch
+        env:
+          GITHUB_BASE_REF: ${{ secrets.GITHUB_BASE_REF }}
+          GITHUB_BASE_COMMIT_SHA: ${{ github.event.pull_request.base.sha }}
+          WEBSTATS_PROJECT_ID: ${{ secrets.WEBSTATS_PROJECT_ID }}
+          WEBSTATS_API_KEY: ${{ secrets.WEBSTATS_API_KEY }}
+      - name: comment PR
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: ${{ steps.compare.outputs.lighthouseComparison }}
+          check_for_duplicate_msg: false  # OPTIONAL
+
