@@ -1,4 +1,4 @@
-const { getInput, setFailed } = require('@actions/core');
+const { getInput, setFailed, setOutput } = require('@actions/core');
 const fetch = require('node-fetch');
 const _ = require('@lhci/utils/src/lodash.js');
 const {computeRepresentativeRuns} = require('@lhci/utils/src/representative-runs.js');
