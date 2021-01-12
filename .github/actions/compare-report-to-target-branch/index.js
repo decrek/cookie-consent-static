@@ -53,7 +53,7 @@ function getLatestBaseReport() {
       `,
       variables: {
         id: process.env.WEBSTATS_PROJECT_ID,
-        git_commit_sha: process.env.GITHUB_SHA,
+        git_commit_sha: process.env.GITHUB_BASE_COMMIT_SHA,
       }
     })
   })
