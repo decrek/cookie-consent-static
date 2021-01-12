@@ -58,7 +58,15 @@ function getLatestBaseReport() {
     })
   })
     .then(res => res.json())
-    .then(body => body.data.statistics[0])
+    .then(body => {
+      console.log(body)
+      console.log('----------')
+      console.log(body.data)
+      console.log('----------')
+      console.log(body.statistics)
+      console.log('----------')
+      return body.data.statistics[0]
+    })
 }
 
 function diff(a, b) {
