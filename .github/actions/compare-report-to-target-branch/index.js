@@ -7,7 +7,7 @@ const {
 } = require('@lhci/utils/src/saved-reports.js');
 
 async function main() {
-  const thisBuild = getInput('report')
+  const thisBuild = JSON.parse(getInput('report'))
   const baseBuild = await getLatestBaseReport()
 
 
