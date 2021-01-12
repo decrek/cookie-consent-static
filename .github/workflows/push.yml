@@ -6,27 +6,27 @@ on:
       - master
 jobs:
   lhci:
-    name: Lighthouse
+    name: Save Lighthouse report to Webstats
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Use Node.js 10.x
+      - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
-          node-version: 10.x
-      - name: npm install, build
-        run: |
-          npm install
-          npm run build
-      - name: run Lighthouse CI
-        id: lhci
+          node-version: 12.x
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+        env:
+          NODE_ENV: ${{ secrets.NODE_ENV }}
+      - name: Run Lighthouse CI
         run: |
           npm install -g @lhci/cli@0.6.x
           lhci autorun
+      - name: Post to webstats
+        uses: ./.github/actions/post-to-webstats
         env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          LHCI_BUILD_TOKEN: ${{ secrets.LHCI_BUILD_TOKEN }}
-          BA_USERNAME: ${{ secrets.BA_USERNAME }}
-          BA_PASSWORD: ${{ secrets.BA_PASSWORD }}
+          GITHUB_SHA: ${{ secrets.GITHUB_SHA }}
+          WEBSTATS_PROJECT_ID: ${{ secrets.WEBSTATS_PROJECT_ID }}
+          WEBSTATS_API_KEY: ${{ secrets.WEBSTATS_API_KEY }}
