@@ -10,10 +10,6 @@ async function main() {
   const thisBuild = getInput('report')
   const baseBuild = await getLatestBaseReport()
 
-  console.log(thisBuild)
-  console.log('----------------------------------------')
-  console.log(baseBuild)
-
   setOutput('lighthouseComparison', thisBuild && baseBuild ? `On this build your scores were
 | Category | Current Build | Base Build | Difference
 | --- | --- | --- | --- |
@@ -58,15 +54,7 @@ function getLatestBaseReport() {
     })
   })
     .then(res => res.json())
-    .then(body => {
-      console.log(body)
-      console.log('----------')
-      console.log(body.data)
-      console.log('----------')
-      console.log(body.data.project.statistics)
-      console.log('----------')
-      return body.data.project.statistics[0]
-    })
+    .then(body => body.data.project.statistics[0])
 }
 
 function diff(a, b) {
