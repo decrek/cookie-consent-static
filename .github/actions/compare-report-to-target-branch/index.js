@@ -14,14 +14,13 @@ async function main() {
 | Category | Current Build | Base Build | Difference
 | --- | --- | --- | --- |
 | Performance | ${thisBuild.performance.score * 100} | ${baseBuild.categories.performance.score * 100} | ${diff(thisBuild.performance.score * 100, baseBuild.categories.performance.score * 100)}|
+| Accessibility | ${thisBuild.accessibility.score * 100} | ${baseBuild.accessibility.score * 100} | ${diff(thisBuild.accessibility.score * 100, baseBuild.accessibility.score * 100)}|
+| Best Practices | ${thisBuild['best-practices'].score * 100} | ${baseBuild.categories['best-practices'].score * 100} | ${diff(thisBuild['best-practices'].score * 100, baseBuild.categories['best-practices'].score * 100)}|
+| SEO | ${thisBuild.seo.score * 100} | ${baseBuild.categories.seo.score * 100} | ${diff(thisBuild.seo.score * 100, baseBuild.categories.seo.score * 100)}|
+| PWA | ${thisBuild.pwa.score * 100} | ${baseBuild.categories.pwa.score * 100} | ${diff(thisBuild.pwa.score * 100, baseBuild.categories.pwa.score * 100)}|
+
 ` : 'Fragments not accesible');
 }
-
-// | Accessibility | ${thisBuild.accessibility.score * 100} | ${baseBuild.accessibility.score * 100} | ${diff(thisBuild.accessibility.score * 100, baseBuild.accessibility.score * 100)}|
-// | Best Practices | ${thisBuild['best-practices'].score * 100} | ${baseBuild['best-practices'].score * 100} | ${diff(thisBuild['best-practices'].score * 100, baseBuild['best-practices'].score * 100)}|
-// | SEO | ${thisBuild.seo.score * 100} | ${baseBuild.seo.score * 100} | ${diff(thisBuild.seo.score * 100, baseBuild.seo.score * 100)}|
-// | PWA | ${thisBuild.pwa.score * 100} | ${baseBuild.pwa.score * 100} | ${diff(thisBuild.pwa.score * 100, baseBuild.pwa.score * 100)}|
-
 
 main().catch(err => setFailed(err.message))
 
