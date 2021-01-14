@@ -32,12 +32,14 @@ jobs:
       - name: Compare lighthouse report to target branch
         id: compare
         uses: ./.github/actions/compare-report-to-target-branch
+        with:
+          report: ${{ steps.report.outputs.report }}
         env:
           GITHUB_BASE_REF: ${{ secrets.GITHUB_BASE_REF }}
           GITHUB_BASE_COMMIT_SHA: ${{ github.event.pull_request.base.sha }}
           WEBSTATS_PROJECT_ID: ${{ secrets.WEBSTATS_PROJECT_ID }}
           WEBSTATS_API_KEY: ${{ secrets.WEBSTATS_API_KEY }}
-      - name: comment PR
+      - name: Comment PR
         uses: unsplash/comment-on-pr@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

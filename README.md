@@ -9,3 +9,4 @@ Static websites can only render a cookie consent with JS, which is late and resu
 ## Solution
 
 Render HTML pages with the cookie consent and use a serviceworker to remove the cookie consent for subsequent pages when the cookie consent is accepted.
+

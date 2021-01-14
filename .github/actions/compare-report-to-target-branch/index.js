@@ -7,17 +7,18 @@ const {
 } = require('@lhci/utils/src/saved-reports.js');
 
 async function main() {
-  const thisBuild = getInput('report')
+  const thisBuild = JSON.parse(getInput('report'))
   const baseBuild = await getLatestBaseReport()
 
   setOutput('lighthouseComparison', thisBuild && baseBuild ? `On this build your scores were
 | Category | Current Build | Base Build | Difference
 | --- | --- | --- | --- |
-| Performance | ${thisBuild.performance.score * 100} | ${baseBuild.performance.score * 100} | ${diff(thisBuild.performance.score * 100, baseBuild.performance.score * 100)}|
-| Accessibility | ${thisBuild.accessibility.score * 100} | ${baseBuild.accessibility.score * 100} | ${diff(thisBuild.accessibility.score * 100, baseBuild.accessibility.score * 100)}|
-| Best Practices | ${thisBuild['best-practices'].score * 100} | ${baseBuild['best-practices'].score * 100} | ${diff(thisBuild['best-practices'].score * 100, baseBuild['best-practices'].score * 100)}|
-| SEO | ${thisBuild.seo.score * 100} | ${baseBuild.seo.score * 100} | ${diff(thisBuild.seo.score * 100, baseBuild.seo.score * 100)}|
-| PWA | ${thisBuild.pwa.score * 100} | ${baseBuild.pwa.score * 100} | ${diff(thisBuild.pwa.score * 100, baseBuild.pwa.score * 100)}|
+| Performance | ${thisBuild.performance.score * 100} | ${baseBuild.categories.performance.score * 100} | ${diff(thisBuild.performance.score * 100, baseBuild.categories.performance.score * 100)}|
+| Accessibility | ${thisBuild.accessibility.score * 100} | ${baseBuild.categories.accessibility.score * 100} | ${diff(thisBuild.accessibility.score * 100, baseBuild.categories.accessibility.score * 100)}|
+| Best Practices | ${thisBuild['best-practices'].score * 100} | ${baseBuild.categories['best-practices'].score * 100} | ${diff(thisBuild['best-practices'].score * 100, baseBuild.categories['best-practices'].score * 100)}|
+| SEO | ${thisBuild.seo.score * 100} | ${baseBuild.categories.seo.score * 100} | ${diff(thisBuild.seo.score * 100, baseBuild.categories.seo.score * 100)}|
+| PWA | ${thisBuild.pwa.score * 100} | ${baseBuild.categories.pwa.score * 100} | ${diff(thisBuild.pwa.score * 100, baseBuild.categories.pwa.score * 100)}|
+
 ` : 'Fragments not accesible');
 }
 
@@ -54,7 +55,7 @@ function getLatestBaseReport() {
     })
   })
     .then(res => res.json())
-    .then(body => body.data.project.statistics[0])
+    .then(body => body.data.project.statistics[0].raw)
 }
 
 function diff(a, b) {
